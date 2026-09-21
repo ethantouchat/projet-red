@@ -36,9 +36,7 @@ type Equipment struct {
  
 		 return attack, health, mana
 	 }
-	}
-}
-
+	
 
 
 
