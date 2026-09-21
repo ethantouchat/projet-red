@@ -22,6 +22,8 @@ func (inv Inventory) Afficher() {
 	if len(inv.Items) == 0 {
 		fmt.Println("Inventaire vide")
 		return
+	} else if len(inv.Items) == 10 {
+		fmt.Println("Inventaire plein")
 	}
 	for _, item := range inv.Items {
 		fmt.Println(" -", item.Nom)

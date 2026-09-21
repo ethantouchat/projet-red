@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	classes "piscine/PlayerClass"
+	suite "piscine/Suite"
 	"piscine/player"
 )
 
@@ -13,7 +14,7 @@ func main() {
 	var choix string
 
 	fmt.Println("|--------------------------|")
-	fmt.Println(" Bienvenue sur [Nom du jeu]")
+	fmt.Println("         Bienvenue")
 	fmt.Println("|--------------------------|")
 
 	fmt.Println("Création de votre personnage")
@@ -44,12 +45,13 @@ func main() {
 	}
 	fmt.Println("Vous avez choisi la classe", classe.Nom)
 
-	joueur1 := player.NewPlayer(nom, classe)
+	joueur1 := player.Character(nom, classe)
 
-	joueur1.Inventaire.AddItem("potion de soin")
-	joueur1.Inventaire.AddItem("potion de poison")
+	joueur1.Inventory.AddItem("potion de soin")
+	joueur1.Inventory.AddItem("potion de poison")
 
 	joueur1.Afficher()
-	fmt.Println("Inventaire de", joueur1.Nom, ":")
-	joueur1.Inventaire.Afficher()
+
+	// Menu principal : boucle jusqu'à ce que le joueur quitte
+	suite.Menu(joueur1.Name, joueur1.Inventory.Afficher)
 }
