@@ -1,0 +1,75 @@
+package fight
+
+import (
+	"fmt"
+
+	"piscine/player"
+)
+
+func RecompenseGoblin1(p *player.Player) {
+	if p == nil {
+		return
+	}
+
+	p.GainXP(150)
+	p.Inventory.AddItem("Goblin Teeth")
+	p.Inventory.AddItem("Goblin Teeth")
+	p.Inventory.AddItem("Iron")
+
+	fmt.Println("Récompense Goblin 1 : +2 niveaux, 2 dents de goblin et du fer")
+}
+
+func recompense(p *player.Player) {
+	RecompenseGoblin1(p)
+}
+
+func RecompenseGoblin2(p *player.Player) {
+	if p == nil {
+		return
+	}
+
+	p.GainXP(150)
+	p.Inventory.AddItem("Goblin Teeth")
+	p.Inventory.AddItem("Goblin Teeth")
+	p.Inventory.AddItem("Iron")
+
+	fmt.Println("Récompense Goblin 1 : +2 niveaux, 2 dents de goblin et du fer")
+}
+
+func recompense(p *player.Player) {
+	RecompenseGoblin2(p)
+}
+
+func RecompenseGoblin3(p *player.Player) {
+	if p == nil {
+		return
+	}
+
+	p.GainXP(150)
+	p.Inventory.AddItem("Goblin Teeth")
+	p.Inventory.AddItem("Goblin Teeth")
+	p.Inventory.AddItem("Iron")
+
+	fmt.Println("Récompense Goblin 1 : +2 niveaux, 2 dents de goblin et du fer")
+}
+
+func recompense(p *player.Player) {
+	RecompenseGoblin3(p)
+}
+
+func AdvancedGoblin(p *player.Player) {
+	if p == nil {
+		return
+	}
+
+	p.GainXP(150)
+	p.Inventory.AddItem("Goblin Teeth")
+	p.Inventory.AddItem("Goblin Teeth")
+	p.Inventory.AddItem("Goblin Helmet")
+
+	fmt.Println("Récompense Goblin 1 : +5 niveaux, 2 dents de goblin et Goblin Helmet")
+}
+
+func recompense(p *player.Player) {
+	RecompenseGoblin1(p)
+}

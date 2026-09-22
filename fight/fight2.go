@@ -1,4 +1,4 @@
-package fitgh
+package fight
 
 func NewGoblin2() Goblin {
 	return Goblin{

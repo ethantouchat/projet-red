@@ -1,4 +1,4 @@
-package fitgh
+package fight
 
 type Goblin struct {
 	Name      string
