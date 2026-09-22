@@ -26,10 +26,10 @@ func RecompenseGoblin2(p *player.Player) {
 
 	p.GainXP(220)
 	p.Inventory.AddItem("Goblin Teeth")
-	p.Inventory.AddItem("Leather")
+	p.Inventory.AddItem("Goblin Teeth")
 	p.Inventory.AddItem("Iron")
 
-	fmt.Println("Récompense Goblin 2 : +220 XP, 1 dent de goblin, du cuir et du fer")
+	fmt.Println("Récompense Goblin 2 : +220 XP, 1 dent de goblin et du fer")
 }
 
 func RecompenseGoblin3(p *player.Player) {
@@ -40,9 +40,9 @@ func RecompenseGoblin3(p *player.Player) {
 	p.GainXP(300)
 	p.Inventory.AddItem("Goblin Teeth")
 	p.Inventory.AddItem("Goblin Teeth")
-	p.Inventory.AddItem("Steel")
+	p.Inventory.AddItem("iron")
 
-	fmt.Println("Récompense Goblin 3 : +300 XP, 2 dents de goblin et de l'acier")
+	fmt.Println("Récompense Goblin 3 : +300 XP, 2 dents de goblin et du fer")
 }
 
 func RecompenseAdvancedGoblin(p *player.Player) {
@@ -53,7 +53,7 @@ func RecompenseAdvancedGoblin(p *player.Player) {
 	p.GainXP(500)
 	p.Inventory.AddItem("Goblin Teeth")
 	p.Inventory.AddItem("Goblin Helmet")
-	p.Inventory.AddItem("Steel")
+	p.Inventory.AddItem("iron")
 
-	fmt.Println("Récompense Advanced Goblin : +500 XP, 1 dent de goblin, un casque et de l'acier")
+	fmt.Println("Récompense Advanced Goblin : +500 XP, 1 dent de goblin, un casque et du fer")
 }
