@@ -1,4 +1,4 @@
-package piscine
+package artefact
 
 type Equipment struct {
 	Name   string
@@ -11,7 +11,7 @@ type Equipment struct {
 func NewEquipment(name string) Equipment {
 	switch name {
 	case "Orb of Avarice":
-		return Equipment{Name: "Orb of Avarice", Rank: "SS", Attack: 2}
+		return Equipment{Name: "Orb of Avarice", Rank: "SS", Attack: *2}
 	case "Goblin Ring":
 		return Equipment{Name: "Goblin Ring", Rank: "B", Mana: 17}
 	case "Traditional Goblin Necklace":

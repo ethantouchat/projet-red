@@ -1,4 +1,4 @@
-package piscine
+package weapon
 
 type Weapon struct {
 	Name   string
