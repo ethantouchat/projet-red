@@ -1,4 +1,4 @@
-package piscine
+package fitgh
 
 func NewGoblin2() Goblin {
 	return Goblin{

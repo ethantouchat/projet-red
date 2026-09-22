@@ -1,4 +1,4 @@
-package piscine
+package fitgh
 
 type Goblin struct {
 	Name      string
