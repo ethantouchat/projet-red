@@ -82,10 +82,16 @@ func newPlayer(nom string, level int, classe classes.Classe) Player {
 	}
 
 	maxHP := MaxHealthForLevel(level)
+<<<<<<< HEAD
 
 	p := Player{
 		Name:       nom,
 		Level:      level,
+=======
+	return Player{
+		Name:       name,
+		Level:      lv,
+>>>>>>> eb13a9ff6739c3b0f79d61aa41e91c8576ecac78
 		Experience: 0,
 		Money:      100,
 		MaxHealth:  maxHP,
