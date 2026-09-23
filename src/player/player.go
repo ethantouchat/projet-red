@@ -11,7 +11,7 @@ import (
 
 const (
 	BaseMaxHealth  = 100
-	HealthPerLevel = 15
+	HealthPerLevel = 10
 	MaxLevel       = 50
 )
 
