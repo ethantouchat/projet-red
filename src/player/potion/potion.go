@@ -96,3 +96,37 @@ func UsePoisonPotion(p *Player, targetHP *int, maxTargetHP int) bool {
 
 	return true
 }
+
+// UseManaPotion consomme une potion de mana et restaure 50% du mana maximum.
+func UseManaPotion(p *Player) bool {
+	if p == nil {
+		return false
+	}
+
+	indexPotion := -1
+	for i, item := range p.Inventory.Items {
+		if item.Nom == "potion de mana" {
+			indexPotion = i
+			break
+		}
+	}
+
+	if indexPotion == -1 {
+		fmt.Println("Tu n'as pas de potion de mana.")
+		return false
+	}
+
+	p.Inventory.Items = append(
+		p.Inventory.Items[:indexPotion],
+		p.Inventory.Items[indexPotion+1:]...,
+	)
+
+	recovery := p.MaxMana / 2
+	p.Mana += recovery
+	if p.Mana > p.MaxMana {
+		p.Mana = p.MaxMana
+	}
+
+	fmt.Printf("Tu as regagné %d mana (50%% de ton mana max). Mana actuel : %d/%d\n", recovery, p.Mana, p.MaxMana)
+	return true
+}

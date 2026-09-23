@@ -19,6 +19,8 @@ type Player struct {
 	Money      int
 	MaxHealth  int
 	Health     int
+	MaxMana    int
+	Mana       int
 	Class      classes.Classe
 	Inventory  Inventory
 }
@@ -36,13 +38,16 @@ func XPToNextLevel(level int) int {
 // newPlayer crée un joueur à un niveau donné, avec des stats cohérentes.
 func newPlayer(nom string, level int, classe classes.Classe) Player {
 	maxHP := MaxHealthForLevel(level)
+	maxMana := classe.Mana
 	return Player{
-		Name:       name,
-		Level:      lv,
+		Name:       nom,
+		Level:      level,
 		Experience: 0,
 		Money:      100,
 		MaxHealth:  maxHP,
 		Health:     maxHP,
+		MaxMana:    maxmana,
+		Mana:       maxMana,
 		Class:      classe,
 		Inventory:  NewInventory(),
 	}
@@ -74,6 +79,7 @@ func (p *Player) levelUp() {
 	p.Level++
 	p.MaxHealth = MaxHealthForLevel(p.Level)
 	p.Health = p.MaxHealth // soin complet à la montée de niveau
+	p.Mana = p.MaxMana // recharge complète du mana à la montée de niveau
 
 	fmt.Println("|--------------------------|")
 	fmt.Printf(" NIVEAU SUPÉRIEUR ! Niveau %d\n", p.Level)

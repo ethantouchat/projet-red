@@ -1,5 +1,7 @@
 package competence
 
+import "fmt"
+
 type Skill struct {
 	Name          string
 	Class         string
@@ -124,6 +126,18 @@ func Competence(name string) Skill {
 			xp:            0,
 			level:         0,
 		}
+	case "Thunderbolt":
+		return Skill{
+			Name:          "flasjh",
+			Class:         "Mage",
+			ManaCost:      10,
+			AttackBonus:   10,
+			RequiredLevel: 8,
+			AllowedPlayer: "Limule",
+			Description:   "Strikes an enemy big flash.",
+			xp:            0,
+			level:         0,
+		}	
 	case "Predator Aura":
 		return Skill{
 			Name:          "Predator Aura",
@@ -176,4 +190,17 @@ func Level(skill Skill, playerName string, playerLevel int, playerLevelUp func()
 	if competenceLevelUp != nil {
 		competenceLevelUp()
 	}
+}
+
+func CanActivate(skill Skill, playerName string, playerLevel int, mana int) bool {
+	if !CanUse(skill, playerName, playerLevel) {
+		return false
+	}
+
+	if mana < skill.ManaCost {
+		fmt.Printf("Mana insuffisant pour utiliser %s : %d mana nécessaire(s).\n", skill.Name, skill.ManaCost)
+		return false
+	}
+
+	return true
 }
