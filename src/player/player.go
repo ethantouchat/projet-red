@@ -37,8 +37,8 @@ func XPToNextLevel(level int) int {
 func newPlayer(nom string, level int, classe classes.Classe) Player {
 	maxHP := MaxHealthForLevel(level)
 	return Player{
-		Name:       nom,
-		Level:      level,
+		Name:       name,
+		Level:      lv,
 		Experience: 0,
 		Money:      100,
 		MaxHealth:  maxHP,

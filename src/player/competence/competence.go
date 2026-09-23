@@ -6,6 +6,7 @@ type Skill struct {
 	ManaCost      int
 	AttackBonus   int
 	RequiredLevel int
+	AllowedPlayer string
 	Description   string
 	xp            int
 	level         int
@@ -41,6 +42,7 @@ func Competence(name string) Skill {
 			Class:         "Mage",
 			ManaCost:      10,
 			RequiredLevel: 1,
+			AllowedPlayer: "Player",
 			Description:   "Launches a fireball at an enemy.",
 			xp:            0,
 			level:         0,
@@ -50,6 +52,7 @@ func Competence(name string) Skill {
 			Name:          "Mana Detection",
 			Class:         "Mage",
 			RequiredLevel: 1,
+			AllowedPlayer: "Player",
 			Description:   "Reveals the mana of an enemy.",
 			xp:            0,
 			level:         0,
@@ -60,6 +63,7 @@ func Competence(name string) Skill {
 			Class:         "Assassin",
 			ManaCost:      5,
 			RequiredLevel: 1,
+			AllowedPlayer: "Player",
 			Description:   "Makes the assassin harder to detect.",
 			xp:            0,
 			level:         0,
@@ -69,6 +73,7 @@ func Competence(name string) Skill {
 			Name:          "Dagger Mastery",
 			Class:         "Assassin",
 			RequiredLevel: 1,
+			AllowedPlayer: "Player",
 			Description:   "Improves damage dealt with daggers.",
 			xp:            0,
 			level:         0,
@@ -79,6 +84,7 @@ func Competence(name string) Skill {
 			Class:         "Swordsman",
 			ManaCost:      2,
 			RequiredLevel: 1,
+			AllowedPlayer: "Player",
 			Description:   "Performs a powerful vertical strike.",
 			xp:            0,
 			level:         0,
@@ -89,6 +95,7 @@ func Competence(name string) Skill {
 			Class:         "Swordsman",
 			ManaCost:      3,
 			RequiredLevel: 1,
+			AllowedPlayer: "Player",
 			Description:   "Performs a wide horizontal strike.",
 			xp:            0,
 			level:         0,
@@ -99,28 +106,9 @@ func Competence(name string) Skill {
 			Class:         "Mage",
 			ManaCost:      25,
 			AttackBonus:   35,
-			RequiredLevel: 10,
-			Description:   "Unleashes a powerful flame attack.",
-			xp:            0,
-			level:         0,
-		}
-	case "Predator Aura":
-		return Skill{
-			Name:          "Predator Aura",
-			Class:         "Assassin",
-			AttackBonus:   10,
-			RequiredLevel: 5,
-			Description:   "Increases the user's attack power.",
-			xp:            0,
-			level:         0,
-		}
-	case "Advanced Blade":
-		return Skill{
-			Name:          "Advanced Blade",
-			Class:         "Swordsman",
-			AttackBonus:   15,
 			RequiredLevel: 8,
-			Description:   "Improves the damage of sword attacks.",
+			AllowedPlayer: "Player",
+			Description:   "Unleashes a powerful flame attack.",
 			xp:            0,
 			level:         0,
 		}
@@ -131,7 +119,30 @@ func Competence(name string) Skill {
 			ManaCost:      20,
 			AttackBonus:   25,
 			RequiredLevel: 8,
+			AllowedPlayer: "Limule",
 			Description:   "Strikes an enemy with lightning.",
+			xp:            0,
+			level:         0,
+		}
+	case "Predator Aura":
+		return Skill{
+			Name:          "Predator Aura",
+			Class:         "Assassin",
+			AttackBonus:   10,
+			RequiredLevel: 8,
+			AllowedPlayer: "Player",
+			Description:   "Increases the user's attack power.",
+			xp:            0,
+			level:         0,
+		}
+	case "Advanced Blade":
+		return Skill{
+			Name:          "Advanced Blade",
+			Class:         "Swordsman",
+			AttackBonus:   15,
+			RequiredLevel: 8,
+			AllowedPlayer: "Player",
+			Description:   "Improves the damage of sword attacks.",
 			xp:            0,
 			level:         0,
 		}
@@ -140,11 +151,17 @@ func Competence(name string) Skill {
 	}
 }
 
-func CanUse(skill Skill, playerLevel int) bool {
-	return skill.Name != "" && playerLevel >= skill.RequiredLevel
+func CanUse(skill Skill, playerName string, playerLevel int) bool {
+	return skill.Name != "" &&
+		(skill.AllowedPlayer == "" || skill.AllowedPlayer == playerName) &&
+		playerLevel >= skill.RequiredLevel
 }
 
-func Level(skill Skill, playerLevel int, playerLevelUp func(), competenceLevelUp func()) {
+func Level(skill Skill, playerName string, playerLevel int, playerLevelUp func(), competenceLevelUp func()) {
+	if !CanUse(skill, playerName, playerLevel) {
+		return
+	}
+
 	if playerLevel >= skill.RequiredLevel {
 		if playerLevelUp != nil {
 			playerLevelUp()
