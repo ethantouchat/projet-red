@@ -3,6 +3,7 @@ package classes
 type Competence struct {
 	Nom    string
 	Degats int
+	Type   string // "physique" ou "magique"
 }
 
 type Classe struct {
@@ -20,8 +21,8 @@ func NewMage() Classe {
 		AttaquePhysique: 1,
 		AttaqueMagique:  10,
 		Competences: []Competence{
-			{Nom: "Boule de feu", Degats: 3},
-			{Nom: "Détection de Mana", Degats: 0},
+			{Nom: "Boule de feu", Degats: 3, Type: "magique"},
+			{Nom: "Détection de Mana", Degats: 0, Type: "magique"},
 		},
 	}
 }
@@ -33,8 +34,8 @@ func NewEpeiste() Classe {
 		AttaquePhysique: 10,
 		AttaqueMagique:  1,
 		Competences: []Competence{
-			{Nom: "Frappe Horizontale", Degats: 2},
-			{Nom: "Frappe Verticale", Degats: 2},
+			{Nom: "Frappe Horizontale", Degats: 2, Type: "physique"},
+			{Nom: "Frappe Verticale", Degats: 2, Type: "physique"},
 		},
 	}
 }
@@ -46,13 +47,12 @@ func NewAssassin() Classe {
 		AttaquePhysique: 4,
 		AttaqueMagique:  3,
 		Competences: []Competence{
-			{Nom: "Mille Entailles", Degats: 4},
-			{Nom: "Furtivité", Degats: 0},
+			{Nom: "Mille Entailles", Degats: 4, Type: "physique"},
+			{Nom: "Furtivité", Degats: 0, Type: "physique"},
 		},
 	}
 }
 
-// Le 2e résultat false si la classe n'existe pas.
 func GetClasse(nom string) (Classe, bool) {
 	switch nom {
 	case "mage":

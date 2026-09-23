@@ -29,7 +29,6 @@ func main() {
 	fmt.Println(" - Epeiste: 1 Mana / 10 Attaque Physique / 1 Attaque Magique")
 	fmt.Println("|--------------------------|")
 
-	// On redemande tant que la classe n'est pas valide
 	var classe classes.Classe
 	for {
 		fmt.Println("Veuillez choisir votre classe:")
@@ -52,6 +51,5 @@ func main() {
 
 	joueur1.Afficher()
 
-	// Menu principal : boucle jusqu'à ce que le joueur quitte
-	suite.Menu(joueur1.Name, joueur1.Inventory.Afficher)
+	suite.Menu(&joueur1)
 }
