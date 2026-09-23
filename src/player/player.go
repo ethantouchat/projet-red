@@ -26,15 +26,6 @@ type Player struct {
 	Inventory  Inventory
 }
 
-// MaxHealthForLevel calcule les PV max pour un niveau donné.
-func MaxHealthForLevel(level int) int {
-	if level < 1 {
-		level = 1
-	}
-
-	return BaseMaxHealth + (level-1)*HealthPerLevel
-}
-
 func XPToNextLevel(level int) int {
 	if level >= MaxLevel {
 		return 0
