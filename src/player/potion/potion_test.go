@@ -4,14 +4,15 @@ import (
 	"testing"
 
 	classes "piscine/PlayerClass"
+	player "piscine/player"
 )
 
 func TestTakePotUsesHealingPotionWhenLowHealth(t *testing.T) {
-	p := Character("Test", classes.NewMage())
+	p := player.Character("Test", classes.NewMage())
 	p.MaxHealth = 100
 	p.Health = 10
-	p.Inventory.AddItem("potion de soin")
-	p.Inventory.AddItem("potion de poison")
+	_ = p.Inventory.AddItem("potion de soin")
+	_ = p.Inventory.AddItem("potion de poison")
 
 	if !TakePot(&p) {
 		t.Fatal("TakePot a retourné false alors qu'un soin était possible")
@@ -27,7 +28,7 @@ func TestTakePotUsesHealingPotionWhenLowHealth(t *testing.T) {
 }
 
 func TestTakePotReturnsFalseWithoutPotion(t *testing.T) {
-	p := Character("Test", classes.NewMage())
+	p := player.Character("Test", classes.NewMage())
 	p.MaxHealth = 100
 	p.Health = 10
 

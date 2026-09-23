@@ -3,6 +3,7 @@ package competence
 type Skill struct {
 	Name          string
 	Class         string
+	Type          string
 	ManaCost      int
 	AttackBonus   int
 	RequiredLevel int
@@ -11,19 +12,32 @@ type Skill struct {
 	level         int
 }
 
+func NewSkill(name, classe, skillType string, manaCost, attackBonus, requiredLevel int, description string) Skill {
+	return Skill{
+		Name:          name,
+		Class:         classe,
+		Type:          skillType,
+		ManaCost:      manaCost,
+		AttackBonus:   attackBonus,
+		RequiredLevel: requiredLevel,
+		Description:   description,
+	}
+}
+
 func (s *Skill) GainXP(amount int) bool {
 	if s == nil || amount <= 0 {
 		return false
 	}
 
 	s.xp += amount
+	leveledUp := false
 	for s.xp >= 50 {
 		s.xp -= 50
 		s.level++
 		s.AttackBonus += 1
-		return true
+		leveledUp = true
 	}
-	return false
+	return leveledUp
 }
 
 func (s *Skill) LevelUp() bool {
@@ -33,108 +47,42 @@ func (s *Skill) LevelUp() bool {
 	return s.GainXP(50)
 }
 
+func (s *Skill) Level() int {
+	if s == nil {
+		return 0
+	}
+	return s.level
+}
+
+func (s *Skill) XP() int {
+	if s == nil {
+		return 0
+	}
+	return s.xp
+}
+
 func Competence(name string) Skill {
 	switch name {
 	case "Fireball":
-		return Skill{
-			Name:          "Fireball",
-			Class:         "Mage",
-			ManaCost:      10,
-			RequiredLevel: 1,
-			Description:   "Launches a fireball at an enemy.",
-			xp:            0,
-			level:         0,
-		}
+		return NewSkill("Fireball", "Mage", "magique", 10, 5, 1, "Lance une boule de feu sur l'ennemi.")
 	case "Mana Detection":
-		return Skill{
-			Name:          "Mana Detection",
-			Class:         "Mage",
-			RequiredLevel: 1,
-			Description:   "Reveals the mana of an enemy.",
-			xp:            0,
-			level:         0,
-		}
+		return NewSkill("Mana Detection", "Mage", "magique", 3, 0, 1, "Révèle le mana de l'ennemi.")
 	case "Stealth":
-		return Skill{
-			Name:          "Stealth",
-			Class:         "Assassin",
-			ManaCost:      5,
-			RequiredLevel: 1,
-			Description:   "Makes the assassin harder to detect.",
-			xp:            0,
-			level:         0,
-		}
+		return NewSkill("Stealth", "Assassin", "physique", 5, 3, 1, "Rend l'assassin plus difficile à détecter.")
 	case "Dagger Mastery":
-		return Skill{
-			Name:          "Dagger Mastery",
-			Class:         "Assassin",
-			RequiredLevel: 1,
-			Description:   "Improves damage dealt with daggers.",
-			xp:            0,
-			level:         0,
-		}
+		return NewSkill("Dagger Mastery", "Assassin", "physique", 0, 2, 1, "Améliore les dégâts infligés avec les dagues.")
 	case "Vertical Strike":
-		return Skill{
-			Name:          "Vertical Strike",
-			Class:         "Swordsman",
-			ManaCost:      2,
-			RequiredLevel: 1,
-			Description:   "Performs a powerful vertical strike.",
-			xp:            0,
-			level:         0,
-		}
+		return NewSkill("Vertical Strike", "Swordsman", "physique", 2, 3, 1, "Effectue une frappe verticale puissante.")
 	case "Horizontal Strike":
-		return Skill{
-			Name:          "Horizontal Strike",
-			Class:         "Swordsman",
-			ManaCost:      3,
-			RequiredLevel: 1,
-			Description:   "Performs a wide horizontal strike.",
-			xp:            0,
-			level:         0,
-		}
+		return NewSkill("Horizontal Strike", "Swordsman", "physique", 3, 3, 1, "Effectue une frappe horizontale large.")
 	case "Flame Emperor":
-		return Skill{
-			Name:          "Flame Emperor",
-			Class:         "Mage",
-			ManaCost:      25,
-			AttackBonus:   35,
-			RequiredLevel: 10,
-			Description:   "Unleashes a powerful flame attack.",
-			xp:            0,
-			level:         0,
-		}
+		return NewSkill("Flame Emperor", "Mage", "magique", 25, 35, 10, "Déchaîne une attaque de feu puissante.")
 	case "Predator Aura":
-		return Skill{
-			Name:          "Predator Aura",
-			Class:         "Assassin",
-			AttackBonus:   10,
-			RequiredLevel: 5,
-			Description:   "Increases the user's attack power.",
-			xp:            0,
-			level:         0,
-		}
+		return NewSkill("Predator Aura", "Assassin", "physique", 0, 10, 5, "Augmente la puissance d'attaque de l'utilisateur.")
 	case "Advanced Blade":
-		return Skill{
-			Name:          "Advanced Blade",
-			Class:         "Swordsman",
-			AttackBonus:   15,
-			RequiredLevel: 8,
-			Description:   "Improves the damage of sword attacks.",
-			xp:            0,
-			level:         0,
-		}
+		return NewSkill("Advanced Blade", "Swordsman", "physique", 0, 15, 8, "Améliore les dégâts des attaques d'épée.")
 	case "Thunderbolt":
-		return Skill{
-			Name:          "Thunderbolt",
-			Class:         "Mage",
-			ManaCost:      20,
-			AttackBonus:   25,
-			RequiredLevel: 8,
-			Description:   "Strikes an enemy with lightning.",
-			xp:            0,
-			level:         0,
-		}
+		return NewSkill("Thunderbolt", "Mage", "magique", 20, 25, 8, "Frappe un ennemi de la foudre.")
 	default:
 		return Skill{}
 	}

@@ -2,12 +2,11 @@ package potion
 
 import (
 	"fmt"
-	"time"
+
+	player "piscine/player"
 )
 
-// TakePot consomme une potion de soin si le joueur a moins de 20% de vie.
-// Retourne true si une potion a bien été utilisée, false sinon.
-func TakePot(p *Player) bool {
+func TakePot(p *player.Player) bool {
 	if p == nil {
 		return false
 	}
@@ -48,9 +47,7 @@ func TakePot(p *Player) bool {
 	return true
 }
 
-// UsePoisonPotion consomme une potion de poison sur une cible donnée.
-// La cible perd 1% de sa vie totale par seconde pendant 15 secondes.
-func UsePoisonPotion(p *Player, targetHP *int, maxTargetHP int) bool {
+func UsePoisonPotion(p *player.Player, targetHP *int, maxTargetHP int) bool {
 	if p == nil || targetHP == nil || maxTargetHP <= 0 {
 		return false
 	}
@@ -73,26 +70,20 @@ func UsePoisonPotion(p *Player, targetHP *int, maxTargetHP int) bool {
 		p.Inventory.Items[indexPotion+1:]...,
 	)
 
-	fmt.Println("Tu utilises une potion de poison ! L'ennemi est empoisonné pendant 15 secondes.")
+	fmt.Println("Tu utilises une potion de poison !")
 
-	go func() {
-		for i := 0; i < 15; i++ {
-			time.Sleep(time.Second)
-			if *targetHP > 0 {
-				damage := maxTargetHP / 100
-				if damage < 1 {
-					damage = 1
-				}
-				if *targetHP-damage < 0 {
-					*targetHP = 0
-				} else {
-					*targetHP -= damage
-				}
-				fmt.Printf("L'ennemi perd %d PV (1%% de sa vie). Vie restante : %d\n", damage, *targetHP)
-			}
-		}
-		fmt.Println("L'effet de poison est terminé.")
-	}()
+	damage := maxTargetHP / 100
+	if damage < 1 {
+		damage = 1
+	}
+
+	if *targetHP-damage < 0 {
+		*targetHP = 0
+	} else {
+		*targetHP -= damage
+	}
+
+	fmt.Printf("L'ennemi perd %d PV (1%% de sa vie). Vie restante : %d\n", damage, *targetHP)
 
 	return true
 }
