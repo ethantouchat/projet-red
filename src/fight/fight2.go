@@ -28,7 +28,7 @@ func NewAdvancedGoblin() *Goblin {
 		Level:     3,
 		MaxHealth: 150,
 		Health:    150,
-		Attack:    30,
+		Attack:    15,
 		Experience: 500,
 		Gold:       103,
 		Drop:      "Goblin Helmet",
