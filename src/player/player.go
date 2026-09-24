@@ -24,6 +24,8 @@ type Player struct {
 	Health     int
 	Class      classes.Classe
 	Inventory  Inventory
+	ArmeAmelioree    bool
+	ArtefactPasEquiper bool
 }
 
 // MaxHealthForLevel calcule les PV max pour un niveau donné.
