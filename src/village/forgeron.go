@@ -1,6 +1,11 @@
 package village
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+	"piscine/player"
+	"piscine/weapon"
+)
 
 // Materiaux représente ce qu'il faut apporter au forgeron pour améliorer une arme.
 type Materiaux struct {
@@ -68,4 +73,59 @@ func (f Forgeron) DemanderMatieres() {
 	fmt.Println("- 1 métal")
 	fmt.Println("- 2 goblinTeeth")
 	fmt.Println("|--------------------------|")
+}
+
+func VisiterForgeron(j *player.Player) {
+	if j == nil {
+		return
+	}
+
+	forgeron := NewForgeron()
+	if j.ArmeAmelioree {
+		fmt.Println(forgeron.Nom, ": Ton arme est déjà améliorée.")
+		return
+	}
+
+	if j.Money < 50 || j.Inventory.CountItem("GoblinTeeth") < 2 || j.Inventory.CountItem("Metal") < 1 {
+		forgeron.DemanderMatieres()
+		return
+	}
+
+	fmt.Println(forgeron.Nom, ": Tu as tous les matériaux nécessaires pour améliorer ton arme.")
+	fmt.Println("Veux-tu améliorer ton arme ? (o/n)")
+	var choix string
+	fmt.Scanln(&choix)
+	if !strings.EqualFold(choix, "o") && !strings.EqualFold(choix, "oui") {
+		fmt.Println(forgeron.Nom, ": D'accord, ton arme reste inchangée.")
+		return
+	}
+
+	j.Money -= 50
+	j.Inventory.RemoveItems("GoblinTeeth", 2)
+	j.Inventory.RemoveItem("Metal")
+	ameliorerArme(j)
+	j.ArmeAmelioree = true
+	fmt.Println(forgeron.Nom, ": Ton arme est maintenant améliorée !")
+}
+
+func ameliorerArme(j *player.Player) {
+	if j.Weapon == nil {
+		return
+	}
+
+	nomAmeliore := map[string]string{
+		"Sword":        "Goblin Slayer Sword",
+		"Staff":        "Goblin Slayer Staff",
+		"Dual Daggers": "Goblin Slayer Dual Daggers",
+	}[j.Weapon.Name]
+	if nomAmeliore == "" {
+		return
+	}
+
+	ancienneMana := j.Weapon.Mana
+	nouvelleArme := weapon.NewWeapon(nomAmeliore)
+	*j.Weapon = nouvelleArme
+	bonusMana := nouvelleArme.Mana - ancienneMana
+	j.MaxMana += bonusMana
+	j.Mana += bonusMana
 }

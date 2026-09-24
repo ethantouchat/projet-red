@@ -22,9 +22,14 @@ type Player struct {
 	Money      int
 	MaxHealth  int
 	Health     int
+	MaxMana    int
+	Mana       int
 	Class      classes.Classe
 	Inventory  Inventory
-	ArmeAmelioree    bool
+	Skills     []competence.Skill
+	Weapon     *weapon.Weapon
+	Artefact   *artefact.Equipment
+	ArmeAmelioree bool
 	ArtefactPasEquiper bool
 }
 
@@ -36,23 +41,80 @@ func XPToNextLevel(level int) int {
 	return 50 * level
 }
 
-func initSkills(classe classes.Classe) []competence.Skill {
+func initSkills(classe classes.Classe, level int) []competence.Skill {
 	skills := make([]competence.Skill, 0, len(classe.Competences))
 	for _, comp := range classe.Competences {
-		manaCost := 0
-		if comp.Type == "magique" {
-			manaCost = comp.Degats * 2
+
+		manaCost := comp.Degats * 2
+		if manaCost == 0 {
+			manaCost = 5
 		}
-		skills = append(skills, competence.NewSkill(
-			comp.Nom,
-			classe.Nom,
-			comp.Type,
-			manaCost,
-			comp.Degats,
-			1,
-			comp.Type,
-		))
+		if classe.Nom == "Mage" && comp.Nom == "Boule de feu" {
+			manaCost = 2
+		}
+		if classe.Nom == "Epeiste" {
+			manaCost = 1
+		}
+		skill := competence.Skill{
+			Name:          comp.Nom,
+			Class:         classe.Nom,
+			Type:          comp.Type,
+			ManaCost:      manaCost,
+			AttackBonus:   comp.Degats,
+			RequiredLevel: 1,
+			AllowedPlayer: "Player",
+		}
+		for skillLevel := 0; skillLevel < level; skillLevel++ {
+			skill.LevelUp()
+		}
+		skills = append(skills, skill)
 	}
+
+	switch classe.Nom {
+	case "Mage":
+		skills = append(skills,
+			competence.Skill{
+				Name:          "Flame Emperor",
+				Class:         "Mage",
+				Type:          "magique",
+				ManaCost:      25,
+				AttackBonus:   35,
+				RequiredLevel: 8,
+			},
+			competence.Skill{
+				Name:          "Flash",
+				Class:         "Mage",
+				Type:          "magique",
+				ManaCost:      10,
+				AttackBonus:   10,
+				RequiredLevel: 8,
+			},
+		)
+	case "Assassin":
+		skills = append(skills, competence.Skill{
+			Name:          "Predator Aura",
+			Class:         "Assassin",
+			Type:          "physique",
+			ManaCost:      10,
+			AttackBonus:   10,
+			RequiredLevel: 8,
+		})
+	}
+
+	skills = append(skills, competence.Skill{
+		Name:          "Récupération de mana",
+		Class:         classe.Nom,
+		Type:          "support",
+		ManaCost:      2,
+		RequiredLevel: 2,
+	})
+
+	for i := range skills {
+		for skills[i].Level() < level {
+			skills[i].LevelUp()
+		}
+	}
+
 	return skills
 }
 
@@ -66,30 +128,52 @@ func newPlayer(nom string, level int, classe classes.Classe) Player {
 		level = MaxLevel
 	}
 
-	maxHP := MaxHealthForLevel(level)
-	return Player{
-		Name:       name,
-		Level:      lv,
+	maxHP := BaseMaxHealth + (level-1)*HealthPerLevel
+	nomArme := "Staff"
+	switch classe.Nom {
+	case "Assassin":
+		nomArme = "Dual Daggers"
+	case "Epeiste":
+		nomArme = "Sword"
+	}
+	arme := weapon.NewWeapon(nomArme)
+	p := Player{
+		Name:       nom,
+		Level:      level,
 		Experience: 0,
 		Money:      100,
 		MaxHealth:  maxHP,
 		Health:     maxHP,
+		MaxMana:    classe.Mana,
+		Mana:       classe.Mana,
 		Class:      classe,
 		Inventory:  NewInventory(),
-		Skills:     initSkills(classe),
+		Skills:     initSkills(classe, level),
+		Weapon:     &arme,
+		ArtefactPasEquiper: true,
 	}
-
-	p.Weapon = weapon.NewArmeDeClasse(classe.Nom)
-	p.Artefact = artefact.NouvelArtefactDeClasse(classe.Nom)
-
-	if p.Artefact != nil {
-		p.MaxHealth += p.Artefact.HealthBonus
-		p.MaxMana += p.Artefact.ManaBonus
-		p.Health = p.MaxHealth
-		p.Mana = p.MaxMana
+	if classe.Nom == "Mage" {
+		p.EquiperArtefact(artefact.NewEquipment("Orb of Avarice"))
 	}
 
 	return p
+}
+
+func (p *Player) EquiperArtefact(equipement artefact.Equipment) bool {
+	if equipement.Name == "" || p.Artefact != nil {
+		return false
+	}
+
+	p.Artefact = &equipement
+	p.ArtefactPasEquiper = false
+	p.MaxHealth += equipement.Life
+	p.Health += equipement.Life
+	p.MaxMana += equipement.Mana
+	p.Mana += equipement.Mana
+	p.Class.AttaquePhysique += equipement.Attack
+	p.Class.AttaqueMagique += equipement.Attack
+
+	return true
 }
 
 func Character(nom string, classe classes.Classe) Player {
@@ -97,7 +181,9 @@ func Character(nom string, classe classes.Classe) Player {
 }
 
 func NewLimule() Player {
-	return newPlayer("Limule", 3, classes.NewMage())
+	limule := newPlayer("Limule", 3, classes.NewMage())
+	limule.Class.AttaquePhysique = 10
+	return limule
 }
 
 func (p *Player) SetLevel(level int) {
@@ -148,8 +234,15 @@ func (p *Player) levelUp() {
 	}
 
 	p.Level++
+	for i := range p.Skills {
+		p.Skills[i].LevelUp()
+		if p.Skills[i].RequiredLevel == p.Level {
+			fmt.Printf("COMPÉTENCE DÉBLOQUÉE : %s\n", p.Skills[i].Name)
+		}
+	}
 
-	p.MaxHealth = MaxHealthForLevel(p.Level)
+	p.MaxHealth = BaseMaxHealth + (p.Level-1)*HealthPerLevel
+	p.MaxMana++
 	p.Health = p.MaxHealth // soin complet à la montée de niveau
 
 	fmt.Println("|--------------------------|")
@@ -213,10 +306,18 @@ func (p *Player) TakeDamage(damage int) {
 		return
 	}
 
+	wasAlive := p.Health > 0
 	p.Health -= damage
 
 	if p.Health < 0 {
 		p.Health = 0
+	}
+
+	if wasAlive && p.Health == 0 {
+		fmt.Println()
+		fmt.Println("========================================")
+		fmt.Println("              YOUR DEAD")
+		fmt.Println("========================================")
 	}
 }
 
@@ -278,13 +379,9 @@ func (p Player) Afficher() {
 	}
 
 	fmt.Printf(
-		" Vie      : %d/%d\n",
+		" Vie      : %d/%d | Mana : %d/%d\n",
 		p.Health,
 		p.MaxHealth,
-	)
-
-	fmt.Printf(
-		" Mana     : %d/%d\n",
 		p.Mana,
 		p.MaxMana,
 	)
@@ -299,23 +396,6 @@ func (p Player) Afficher() {
 		p.Class.AttaquePhysique,
 		p.Class.AttaqueMagique,
 	)
-
-	if p.Weapon != nil {
-		fmt.Printf(
-			" Arme     : %s (+%d %s)\n",
-			p.Weapon.Name,
-			p.Weapon.AttackBonus,
-			p.Weapon.Type,
-		)
-	}
-
-	if p.Artefact != nil {
-		fmt.Printf(
-			" Artéfact : %s\n",
-			p.Artefact.Name,
-		)
-	}
-
 	fmt.Println(" Compétences :")
 
 	for _, s := range p.Skills {

@@ -5,6 +5,7 @@ import "fmt"
 type Skill struct {
 	Name          string
 	Class         string
+	Type          string
 	ManaCost      int
 	AttackBonus   int
 	RequiredLevel int
@@ -12,6 +13,10 @@ type Skill struct {
 	Description   string
 	xp            int
 	level         int
+}
+
+func (s Skill) Level() int {
+	return s.level
 }
 
 func (s *Skill) GainXP(amount int) bool {
@@ -126,9 +131,9 @@ func Competence(name string) Skill {
 			xp:            0,
 			level:         0,
 		}
-	case "Thunderbolt":
+	case "Flash":
 		return Skill{
-			Name:          "flasjh",
+			Name:          "Flash",
 			Class:         "Mage",
 			ManaCost:      10,
 			AttackBonus:   10,

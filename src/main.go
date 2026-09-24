@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strings"
 
 	classes "piscine/PlayerClass"
 	suite "piscine/Suite"
@@ -24,23 +23,27 @@ func main() {
 
 	fmt.Println("|--------------------------|")
 	fmt.Println("    Information Classes")
-	fmt.Println(" - Assassin: 5 Mana / 4 Attaque Physique / 3 Attaque Magique")
-	fmt.Println(" - Mage: 10 Mana / 1 Attaque Physique / 10 Attaque Magique")
-	fmt.Println(" - Epeiste: 1 Mana / 10 Attaque Physique / 1 Attaque Magique")
+	fmt.Println("1 - Assassin : 5 Mana / 4 Attaque Physique / 3 Attaque Magique")
+	fmt.Println("2 - Epeiste  : 1 Mana / 10 Attaque Physique / 1 Attaque Magique")
+	fmt.Println("3 - Mage     : 10 Mana / 1 Attaque Physique / 10 Attaque Magique")
 	fmt.Println("|--------------------------|")
 
 	var classe classes.Classe
 	for {
-		fmt.Println("Veuillez choisir votre classe:")
+		fmt.Println("Veuillez choisir votre classe (1, 2 ou 3):")
 		fmt.Scanln(&choix)
-		choix = strings.ToLower(choix)
 
-		c, ok := classes.GetClasse(choix)
+		nomClasse := map[string]string{
+			"1": "assassin",
+			"2": "epeiste",
+			"3": "mage",
+		}[choix]
+		c, ok := classes.GetClasse(nomClasse)
 		if ok {
 			classe = c
 			break
 		}
-		fmt.Println("Classe non reconnue, veuillez choisir entre Assassin, Epeiste et Mage")
+		fmt.Println("Choix invalide, tape 1, 2 ou 3.")
 	}
 	fmt.Println("Vous avez choisi la classe", classe.Nom)
 
@@ -48,6 +51,7 @@ func main() {
 
 	joueur1.Inventory.AddItem("potion de soin")
 	joueur1.Inventory.AddItem("potion de poison")
+	joueur1.Inventory.AddItem("potion de mana")
 
 	joueur1.Afficher()
 
